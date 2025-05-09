@@ -1,5 +1,6 @@
 from fastapi import APIRouter, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from applications.users.schemas import BaseFields, RegisterUserFields
 from settings import settings
 
