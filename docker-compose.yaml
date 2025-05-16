@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
   documentation:
@@ -11,26 +10,26 @@ services:
     volumes:
       - ./documentation:/docs:ro
 
-  local_database:
+  local_database_course:
     image: postgres:16-alpine
-    container_name: local_database
-    hostname: local_database
+    container_name: local_database_course
+    hostname: local_database_course
     restart: always
     env_file:
       - .env
     ports:
-      - "6655:${POSTGRES_PORT}"
+      - "8787:${POSTGRES_PORT}"
     volumes:
-      - postgres_datastorage:/var/lib/postgresgl/data
+      - postgres_datastorage_course:/var/lib/postgresgl/data
     networks:
       - main_network
 
-  backend_api:
+  backend_api_course:
     build:
       dockerfile: Dockerfile
       context: ./backend_api
-    container_name: backend_api
-    hostname: backend_api
+    container_name: backend_api_course
+    hostname: backend_api_course
     restart: always
     env_file:
       - .env
@@ -51,5 +50,5 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_datastorage:
+  postgres_datastorage_course:
     external: false

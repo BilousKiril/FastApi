@@ -10,7 +10,9 @@ router_users = APIRouter()
 
 
 async def create_user_in_db(email, name, password, session: AsyncSession):
-    new_user = User(email=email, name=name, hashed_password=PasswordEndcrypt.get_password_hash(password))
+
+    hashed_password = await PasswordEndcrypt.get_password_hash(password)
+    new_user = User(email=email, name=name, hashed_password=hashed_password)
     session.add(new_user)
     await session.commit()
 
