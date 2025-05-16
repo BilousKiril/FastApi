@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from sqlalchemy import select
 from applications.auth.password_handler import PasswordEndcrypt
 from applications.users.models import User
 from applications.users.schemas import BaseFields, RegisterUserFields
