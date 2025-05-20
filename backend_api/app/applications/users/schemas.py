@@ -4,7 +4,6 @@ from pydantic import BaseModel, EmailStr, Field, ValidationInfo, model_validator
 class BaseFields(BaseModel):
     email: EmailStr = Field(description="User email", examples=["bilouskiril3@gmail.com"])
     name: str = Field(description="User nickname", examples=["Casper"])
-    password: str = Field(min_lenght=8)
 
 
 class PasswordField(BaseModel):
@@ -26,3 +25,7 @@ class PasswordField(BaseModel):
 
 class RegisterUserFields(BaseFields, PasswordField):
     pass
+
+
+class BaseUserInfo(BaseFields):
+    id: int
