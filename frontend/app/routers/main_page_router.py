@@ -21,8 +21,18 @@ async def login_user(user_email: str, password: str):
 
         )
         print(response.json())
+        return response.json()
 
 
+async def get_user_info(access_token: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            url='http://backend_api_course:9999/api/auth/get-my-info',
+            headers={"Authorization": f'Bearer {access_token}'}
+
+        )
+        print(response.json())
+        return response.json()
 
 @router.get('/login')
 @router.post('/login')
@@ -31,8 +41,13 @@ async def login(request: Request, user_email: str = Form(''), password: str = Fo
     print(F"{user_email}")
     print(F"{password}")
 
-    await login_user(user_email, password)
+    user_tokens = await login_user(user_email, password)
+    access_token = user_tokens.get('access_token')
+    user = None
+    if access_token:
+        user = await get_user_info(access_token)
 
-    context = {'request': request}
+
+    context = {'request': request, 'user': user}
     response = templates.TemplateResponse('login.html', context=context)
     return response
