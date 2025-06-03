@@ -2,12 +2,11 @@ from fastapi import APIRouter, Request, Form, Depends, status
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 
-from backend.api import get_current_user_with_token, login_user
+from backend.api import get_current_user_with_token, login_user, register_user
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory='templates')
-
 
 
 @router.get('/')
@@ -17,8 +16,6 @@ async def index(request: Request, user: dict = Depends(get_current_user_with_tok
         context['user'] = user
     response = templates.TemplateResponse('index.html', context=context)
     return response
-
-
 
 
 @router.get('/login')
@@ -42,7 +39,6 @@ async def login(request: Request, user: dict = Depends(get_current_user_with_tok
         errors = ["Incorrect login or password"]
         context['errors'] = errors
         return templates.TemplateResponse('login.html', context=context)
-
     response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
     response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60 * 5)
     return response
@@ -54,7 +50,6 @@ async def logout(request: Request):
     response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie('access_token')
     return response
-
 
 
 @router.get('/register')
@@ -76,12 +71,13 @@ async def register(
         response = templates.TemplateResponse('register.html', context=context)
         response.delete_cookie('access_token')
         return response
-    user_tokens = await login_user(user_email, password)
-    access_token = user_tokens.get('access_token')
-    if not access_token:
-        errors = ["Incorrect login or password"]
-        context['errors'] = errors
-        return templates.TemplateResponse('login.html', context=context)
-    response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
-    response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60 * 5)
-    return response
+
+    created_user = await register_user(user_email=user_email, password=password, name=user_name)
+    if created_user['email']:
+
+        user_tokens = await login_user(user_email, password)
+        access_token = user_tokens.get('access_token')
+         #     context['errors'] = errors
+        response = RedirectResponse(redirect_url, status_code=status.HTTP_303_SEE_OTHER)
+        response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=60 * 5)
+        return response
