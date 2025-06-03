@@ -5,6 +5,15 @@ from applications.users.router import router_users
 from settings import settings
 
 
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn=settings.SENTRY,
+    send_default_pii=True,
+)
+
+app = FastAPI()
+
 def get_application():
 
     app = FastAPI(root_path="/api", root_path_in_servers=True, debug=settings.DEBUG)
