@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -24,5 +24,13 @@ async def get_user_by_email(email, session: AsyncSession) -> User | None:
     result = await session.execute(query)
     return result.scalar_one_or_none()
 
-async def activate_user_account(user_uuid, session: AsyncSession):
-    pass
+async def activate_user_account(user_uuid, session: AsyncSession) -> None:
+    query = select(User).filter(User.uuid_data == user_uuid)
+    result = await session.execute(query)
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=404, detail='Provided data does not belong to known user')
+
+    user.is_verified = True
+    session.add(user)
+    await session.commit()

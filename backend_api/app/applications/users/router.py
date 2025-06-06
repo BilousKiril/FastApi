@@ -21,6 +21,6 @@ async def create_user(new_user: RegisterUserFields, session: AsyncSession = Depe
     return created_user
 
 @router_users.get('/verify/{user_uuid}')
-async def verify_user(user_uuid: uuid.UUID, session: AsyncSession = Depends(get_async_session())):
+async def verify_user(user_uuid: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
     await activate_user_account(user_uuid, session)
     return {"Status": "activated"}
