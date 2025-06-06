@@ -23,3 +23,6 @@ async def get_user_by_email(email, session: AsyncSession) -> User | None:
     query = select(User).filter(User.email == email)
     result = await session.execute(query)
     return result.scalar_one_or_none()
+
+async def activate_user_account(user_uuid, session: AsyncSession):
+    pass
