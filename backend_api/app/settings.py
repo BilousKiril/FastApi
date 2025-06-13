@@ -16,6 +16,12 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str
 
     SENTRY: str
+
+    RMQ_HOST: str
+    RMQ_PORT: int
+    RMQ_VIRTUAL: str
+    RMQ_USER: str
+    RMQ_PASSWORD: str
     @property
     def DATABASE_URL_ASYNC(self) -> str:
         return (
