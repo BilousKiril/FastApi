@@ -31,6 +31,8 @@ services:
     container_name: backend_api_course
     hostname: backend_api_course
     restart: always
+    depends_on:
+      - notification_service
     env_file:
       - .env
     volumes:

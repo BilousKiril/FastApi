@@ -23,7 +23,7 @@ class RabbitMQBroker:
     def send_message(self, message: dict, queue_name: str):
         with self.get_connection() as connection:
             with connection.channel() as channel:
-                channel.queue_declare(queue=queue_name)
+                channel.queue_declare(queue=queue_name, durable=True)
 
                 message_json_str = json.dumps(message)
 
