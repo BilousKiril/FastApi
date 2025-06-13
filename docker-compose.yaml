@@ -20,7 +20,7 @@ services:
     ports:
       - "8787:${POSTGRES_PORT}"
     volumes:
-      - postgres_datastorage_course:/var/lib/postgresgl/data
+      - postgres_datastorage_course:/var/lib/postgresql/data
     networks:
       - main_network
 
