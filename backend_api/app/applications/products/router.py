@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, UploadFile, Depends
 import uuid
 from applications.auth.security import admin_required, get_current_user
-from applications.products.crud import create_product_in_db
+from applications.products.crud import create_product_in_db, get_products_data
 from services.s3.s3 import s3_storage
 from sqlalchemy.ext.asyncio import AsyncSession
 from applications.products.schemas import ProductSchema, SearchParamsSchema
@@ -40,5 +40,7 @@ async def get_product(pk: int):
     return
 
 
+@products_router.get('/')
 async def get_products(params: Annotated[SearchParamsSchema, Depends()], session: AsyncSession = Depends(get_async_session)):
-    return
+    result = await get_products_data(params, session)
+    return result
