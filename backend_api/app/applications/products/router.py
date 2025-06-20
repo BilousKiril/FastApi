@@ -4,6 +4,7 @@ import uuid
 from applications.products.crud import create_product_in_db
 from services.s3.s3 import s3_storage
 from sqlalchemy.ext.asyncio import AsyncSession
+from applications.products.schemas import ProductSchema
 
 from applications.users.crud import create_user_in_db, get_user_by_email, activate_user_account
 from applications.users.schemas import BaseUserInfo, RegisterUserFields
