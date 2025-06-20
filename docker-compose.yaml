@@ -48,22 +48,22 @@ services:
       - main_network
 
 
-  frontend:
+  frontend_course:
     build:
       dockerfile: Dockerfile
       context: ./frontend
-    container_name: frontend
-    hostname: frontend
+    container_name: frontend_course
+    hostname: frontend_course
     restart: always
     env_file:
       - .env
     volumes:
       - ./frontend/app:/app
     ports:
-      - "12345:12345"
+      - "12341:12341"
     command: |
       sh -c "
-      uvicorn main:app --port=12345 --host=0.0.0.0 --reload
+      uvicorn main:app --port=12341 --host=0.0.0.0 --reload
       "
     networks:
       - main_network
