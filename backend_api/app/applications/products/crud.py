@@ -39,6 +39,8 @@ async def get_products_data(params: SearchParamsSchema, session: AsyncSession):
     order_direction = asc if params.order_direction == SortEnum.ASC else desc
 
     # if params.q:
+
+
     sort_field = Product.price if params.sort_by == SortByEnum.PRICE else Product.id
     query = query.order_by(order_direction(sort_field))
     offset = (params.page - 1) * params.limit
@@ -49,7 +51,7 @@ async def get_products_data(params: SearchParamsSchema, session: AsyncSession):
     total = result_count.scalar()
 
     return {
-        "items": [],  #
+        "items": result.scalars().all(),
         "total": total,
         'page': params.page,
         'limit': params.limit,
