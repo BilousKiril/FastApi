@@ -1,15 +1,19 @@
-from fastapi import APIRouter, Body, UploadFile, Depends
+from typing import Annotated
+
+from fastapi import APIRouter, Body, UploadFile, Depends, HTTPException, status
 import uuid
-from applications.auth.security import admin_required, get_current_user
-from applications.products.crud import create_product_in_db, get_products_data
-from services.s3.s3 import s3_storage
-from sqlalchemy.ext.asyncio import AsyncSession
+
+from applications.auth.security import admin_required
+from applications.products.crud import create_product_in_db, get_products_data, get_product_by_pk
 from applications.products.schemas import ProductSchema, SearchParamsSchema
 from applications.users.models import User
+from services.s3.s3 import s3_storage
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from applications.users.crud import create_user_in_db, get_user_by_email, activate_user_account
 from applications.users.schemas import BaseUserInfo, RegisterUserFields
 from database.session_dependancies import get_async_session
-from typing import Annotated
+
 products_router = APIRouter()
 
 
@@ -36,8 +40,11 @@ async def create_product(
 
 
 @products_router.get('/{pk}')
-async def get_product(pk: int):
-    return
+async def get_product(pk: int, session: AsyncSession = Depends(get_async_session),) -> ProductSchema:
+    product = await get_product_by_pk(pk, session)
+    if not product:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Product with pk #{pk} not found")
+    return product
 
 
 @products_router.get('/')
