@@ -60,10 +60,10 @@ services:
     volumes:
       - ./frontend/app:/app
     ports:
-      - "12341:12341"
+      - "12342:12342"
     command: |
       sh -c "
-      uvicorn main:app --port=12341 --host=0.0.0.0 --reload
+      uvicorn main:app --port=12342 --host=0.0.0.0 --reload
       "
     networks:
       - main_network
